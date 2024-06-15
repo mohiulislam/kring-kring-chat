@@ -59,7 +59,8 @@ export interface Media {
 
 // Interface for Message
 export interface Message {
-  user: User;
+  _id?: string;
+  user: string;
   group?: Group;
   content: string;
   media?: Media;

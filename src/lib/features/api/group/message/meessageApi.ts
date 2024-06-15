@@ -3,7 +3,7 @@ import apiSlice from "../../apiSlice";
 import socket from "@/socket/socket";
 import toast from "react-hot-toast";
 
-export const messgesApi = apiSlice.injectEndpoints({
+export const messagesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getMessages: builder.query<
       Message[],
@@ -13,27 +13,21 @@ export const messgesApi = apiSlice.injectEndpoints({
         `/group/message?pageSize=${pageSize}&pageNumber=${pageNumber}&groupId=${groupId}`,
       async onCacheEntryAdded(
         arg,
-        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved, getState }
       ) {
         try {
           await cacheDataLoaded;
           socket.on("message", (data) => {
-            toast.success(JSON.stringify(data.content));
-            updateCachedData((draft) => {
-              draft.push({
-                user: data.user.userId,
-                content: data.content,
-                createdAt: data.createdAt,
-              });
-            });
+            const rootState = getState();
+            if (rootState.group.groupId === data.group) {
+              toast.success(JSON.stringify(data.content));
+              updateCachedData((draft) => {});
+            }
           });
-        } catch {
-          // no-op in case `cacheEntryRemoved` resolves before `cacheDataLoaded`,
-          // in which case `cacheDataLoaded` will throw
-        }
+        } catch {}
       },
     }),
   }),
 });
 
-export const { useGetMessagesQuery } = messgesApi;
+export const { useGetMessagesQuery } = messagesApi;

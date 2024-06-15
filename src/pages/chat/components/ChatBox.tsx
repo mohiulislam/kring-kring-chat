@@ -6,20 +6,45 @@ import {
   Typography,
 } from "@mui/material";
 
-import toast from "react-hot-toast";
-import { useGetMessagesQuery } from "../../../lib/features/api/group/message/meessageApi";
+import { useGetMessages } from "@/apiHooks/message/useMessage";
+import { Message } from "@/interfaces/interfaces";
 import ChatBubble from "./ChatBubble";
 import ChatInput from "./ChatInput";
+import { useAuthStore, useGroupStore } from "@/store/store";
+import InfiniteScroll from "react-infinite-scroller";
+import { useEffect, useRef, useState } from "react";
 
 function ChatBox() {
-  const groupId = "66604d2fecc21e0241eb5383";
+  const groupId = useGroupStore((state) => state.groupId);
   const {
-    data: messages,
+    data,
+    error,
     isLoading,
     isError,
-    error,
-  } = useGetMessagesQuery({ groupId });
+    fetchPreviousPage,
+    status,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetMessages({ groupId, pageSize: 15 });
 
+  const userId = useAuthStore((state) => state?.userAuthInfo.user._id);
+
+  const loadMore = () => {
+    if (!isFetchingNextPage && hasNextPage) {
+      fetchNextPage();
+    }
+  };
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+
+  useEffect(() => {
+    if (data?.pageParams?.length < 2 && scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [data?.pageParams]);
+
+  
   return (
     <Box
       sx={{
@@ -31,6 +56,7 @@ function ChatBox() {
         backgroundSize: "cover",
         backgroundPosition: "center",
         position: "relative",
+        justifyContent: "space-between",
       }}
     >
       <Box
@@ -62,36 +88,47 @@ function ChatBox() {
           }
         />
       </Box>
-      <Box sx={{ paddingTop: "1vh", overflow: "auto" }}>
-        <Box
-          sx={{
-            width: "40%",
-            marginLeft: true ? "auto" : "16px",
-            marginRight: true ? "16px" : "auto",
-          }}
+      <Box
+        ref={scrollRef}
+        sx={{ paddingTop: "1vh", overflow: "auto", flexBasis: "100%" }}
+      >
+        <InfiniteScroll
+          loadMore={loadMore}
+          hasMore={hasNextPage}
+          loader={<div className="loader">Loading...</div>}
+          useWindow={false}
+          isReverse
+          threshold={5}
+          initialLoad={false}
         >
-          <ChatBubble
-            message="Assalamualaykum."
-            isSender={true}
-            deliveryTime="now"
-          />
-        </Box>
-        <Box
-          sx={{
-            width: "40%",
-            marginLeft: false ? "auto" : "16px",
-            marginRight: false ? "16px" : "auto",
-          }}
-        >
-          <ChatBubble
-            message="Walaykumus salam"
-            isSender={false}
-            deliveryTime="now"
-          />
-        </Box>
+          {status === "success" &&
+            data.pages
+              .slice()
+              .reverse()
+              .map((page) =>
+                page
+                  .slice()
+                  .reverse()
+                  .map((message: Message) => (
+                    <Box
+                      key={message._id}
+                      sx={{
+                        width: "40%",
+                        marginLeft: userId === message.user ? "auto" : "16px",
+                        marginRight: userId === message.user ? "16px" : "auto",
+                      }}
+                    >
+                      <ChatBubble
+                        won={userId === message.user}
+                        message={message}
+                      />
+                    </Box>
+                  ))
+              )}
+        </InfiniteScroll>
       </Box>
-      <Box sx={{ position: "absolute", bottom: 0, width: "100%" }}>
-        <ChatInput />
+      <Box sx={{ width: "100%" }}>
+        <ChatInput groupId={groupId} />
       </Box>
     </Box>
   );

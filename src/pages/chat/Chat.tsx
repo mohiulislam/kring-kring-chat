@@ -1,13 +1,22 @@
 import { Box, Grid, List, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import ChatItem from "./components/ChatItem";
-import ChatBox from "./components/ChatBox";
-import { useGetGroupsQuery } from "../../lib/features/api/group/groupsApi";
+import { useEffect } from "react";
+
+import { useGetGroups } from "@/apiHooks/group/useGroup";
+import { useGroupStore } from "@/store/store";
 import socket from "../../socket/socket";
+import ChatBox from "./components/ChatBox";
+import ChatItem from "./components/ChatItem";
 
 function Chat() {
-  const { data: groups, isLoading, isError, error } = useGetGroupsQuery();
-  const [group, setGroup] = useState<string | null>();
+  const { data: groups, error, isLoading, isError } = useGetGroups();
+
+  const { groupId, setGroupId } = useGroupStore();
+
+  const handleSetGroup = (groupId: string) => {
+    setGroupId(groupId);
+  };
+
+  console.log(groups);
 
   useEffect(() => {
     if (groups) {
@@ -59,13 +68,12 @@ function Chat() {
               <List>
                 {groups?.map((group: any) => {
                   return (
-                    <div
-                      onClick={() => {
-                        setGroup(group.id);
-                      }}
+                    <Box
+                      sx={{ cursor: "pointer" }}
+                      onClick={() => handleSetGroup(group._id)}
                     >
                       <ChatItem group={group} />
-                    </div>
+                    </Box>
                   );
                 })}
               </List>
@@ -74,7 +82,7 @@ function Chat() {
         </Box>
       </Grid>
       <Grid sx={{ height: "100%" }} xs={8} md={9} item>
-        <ChatBox />
+        {groupId && <ChatBox />}
       </Grid>
     </Grid>
   );

@@ -1,31 +1,33 @@
-import React from "react";
+import { Message } from "@/interfaces/interfaces";
+import { getDeliveryTime } from "@/utils/getDeliveryTime";
 import { Box, Typography } from "@mui/material";
+import React from "react";
 
 interface ChatBubbleProps {
-  message: string;
-  isSender: boolean;
-  deliveryTime: string;
+  message: Message;
+  won: boolean;
 }
 
-const ChatBubble: React.FC<ChatBubbleProps> = ({
-  message,
-  isSender,
-  deliveryTime,
-}) => {
+const ChatBubble: React.FC<ChatBubbleProps> = ({ message, won }) => {
+  const deliveryTime = getDeliveryTime(message.createdAt);
   return (
     <Box
       sx={{
-        backgroundColor: isSender ? "primary.dark" : "background.default",
+        backgroundColor: won ? "primary.dark" : "#474747",
         borderRadius: "12px",
         padding: "8px 16px",
         margin: "8px 0",
         display: "flex",
         flexDirection: "column",
-        alignItems: isSender ? "flex-end" : "flex-start",
+        alignItems: won ? "flex-end" : "flex-start",
+        wordBreak: "break-word",
       }}
     >
-      <Typography variant="body1" sx={{ color: "text.primary" }}>
-        {message}
+      <Typography
+        variant="body1"
+        sx={{ color: "text.primary", wordBreak: "break-word" }} // Apply wordBreak to text
+      >
+        {message.content}
       </Typography>
       <Typography
         variant="caption"

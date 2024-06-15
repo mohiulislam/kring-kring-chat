@@ -2,8 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const storedUser = localStorage.getItem("user");
 const initialState = {
-  loading: false,
-  user: storedUser ? JSON.parse(storedUser) : null,
+  userCredential: storedUser ? JSON.parse(storedUser) : null,
 };
 
 const authSlice = createSlice({
@@ -11,7 +10,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logOut: (state, { payload }: PayloadAction<void>) => {
-      state.user = null; 
+      state.userCredential = null; 
       localStorage.removeItem("user"); 
     },
   },
