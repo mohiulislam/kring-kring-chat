@@ -7,9 +7,10 @@ const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
     Authorization: `Bearer ${
-      JSON.parse(localStorage.getItem("userAuthInfo" || "null")).access_token
+      JSON.parse(localStorage.getItem("userAuthInfo" || "null"))?.access_token
     }`,
   },
 });
 
 export default apiClient;
+ 

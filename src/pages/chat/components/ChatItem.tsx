@@ -6,16 +6,23 @@ import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import { format } from "date-fns";
 import { Group } from "../../../interfaces/interfaces";
+import { useAuthStore } from "@/store/store";
 
 export default function ChatItem({ group }: { group: Group }) {
-  const participantName =
-    group?.users[0]?.firstName + group?.users[0]?.lastName;
-  const lastMessage = group.lastMessage.content;
+  const userId = useAuthStore((state) => state?.userAuthInfo.user._id);
 
-  const lastMessageTime = format(
-    group.lastMessage.updatedAt ?? "",
-    "M/d/yy, h:mma"
-  );
+  const participant = group.users.find((user) => user._id !== userId);
+
+  const participantName = participant?.firstName + " " + participant?.lastName;
+  
+  const lastMessage = group?.lastMessage?.content;
+
+  console.log(group);
+  
+
+  const lastMessageTime = lastMessage
+    ? format(group.lastMessage.updatedAt ?? "", "M/d/yy, h:mma")
+    : null;
   return (
     <ListItem
       sx={{
@@ -64,7 +71,7 @@ export default function ChatItem({ group }: { group: Group }) {
                 overflow: "hidden",
               }}
             >
-              {lastMessage}
+              {lastMessage || "Start a conversation"}
             </Typography>
 
             <Typography color="text.secondary" variant="caption">

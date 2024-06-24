@@ -1,9 +1,10 @@
+import { useVerifyMutation } from "@/apiHooks/auth/useAuth";
 import { Input as BaseInput } from "@mui/base/Input";
 import { Button, CircularProgress, Typography } from "@mui/material";
 import { Box, styled } from "@mui/system";
 import * as React from "react";
 import toast from "react-hot-toast";
-import { useVerifyEmailMutation } from "../../../lib/features/api/auth/verifyOtp";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function OTP({
   separator,
@@ -184,9 +185,24 @@ function OTP({
 
 export default function OTPInput() {
   const [otp, setOtp] = React.useState("");
-  const [verifyEmail, { data, error, isLoading, isSuccess, isError }] =
-    useVerifyEmailMutation();
-  const [timeRemaining, setTimeRemaining] = React.useState(10);
+  const {
+    data,
+    error,
+    isError,
+    isIdle,
+    isPending,
+    isPaused,
+    isSuccess,
+    failureCount,
+    failureReason,
+    mutate,
+    mutateAsync,
+    reset,
+    status,
+    submittedAt,
+    variables,
+  } = useVerifyMutation();
+  const [timeRemaining, setTimeRemaining] = React.useState(180);
   React.useEffect(() => {
     if (!timeRemaining) return;
 
@@ -207,24 +223,27 @@ export default function OTPInput() {
       toast.success("OTP has been resent.");
     }, 2000); // Simulated delay for the API call
   }
-
+  const { state } = useLocation();
   function handleverifyEmail() {
-    verifyEmail({
+    mutate({
       code: otp,
-      email: " searchParams.email!",
+      email: state.email,
     });
   }
-
+ 
   const [isResending, setIsResending] = React.useState(false);
+
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     if (isSuccess && data?.message && data?.success) {
       toast.success(data?.message);
+      navigate("/chat");
     }
     if (isSuccess && data?.message && !data?.success) {
       toast.error(data?.message);
     }
-  });
+  }, [isSuccess, data]);
 
   return (
     <Box
@@ -305,7 +324,7 @@ export default function OTPInput() {
           }}
           onClick={() => handleverifyEmail()}
         >
-          {isLoading ? "Verifying..." : "Verify"}
+          {isPending ? "Verifying..." : "Verify"}
         </Button>
       </Box>
     </Box>

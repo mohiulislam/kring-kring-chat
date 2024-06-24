@@ -1,6 +1,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import apiClient from "@/axios/axiosInstance";
-import { Message } from "@/interfaces/interfaces";
+
+interface Message {
+  user:  string;
+  content: string;
+  createdAt: Date;
+}
 
 interface GetMessagesParams {
   groupId: string;

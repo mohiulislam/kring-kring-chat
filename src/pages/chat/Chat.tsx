@@ -1,11 +1,29 @@
-import { Box, Grid, List, Typography } from "@mui/material";
-import { useEffect } from "react";
+import { Box, Grid, List, TextField, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 
 import { useGetGroups } from "@/apiHooks/group/useGroup";
-import { useGroupStore } from "@/store/store";
+import { useAddToContactModalStore, useGroupStore } from "@/store/store";
 import socket from "../../socket/socket";
 import ChatBox from "./components/ChatBox";
 import ChatItem from "./components/ChatItem";
+import Modal from "@mui/material/Modal";
+import Button from "@mui/material/Button";
+import CloseIcon from "@mui/icons-material/Close";
+import * as yup from "yup";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-hot-toast";
+const schema = yup
+  .object({
+    email: yup
+      .string()
+      .email("Invalid email address")
+      .required("Email is required"),
+  })
+  .required();
+interface FormData {
+  email: string;
+}
 
 function Chat() {
   const { data: groups, error, isLoading, isError } = useGetGroups();
@@ -16,8 +34,6 @@ function Chat() {
     setGroupId(groupId);
   };
 
-  console.log(groups);
-
   useEffect(() => {
     if (groups) {
       groups.forEach((group) =>
@@ -26,8 +42,89 @@ function Chat() {
     }
   }, [groups]);
 
+  const style = {
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "#3b3b3b",
+    border: "2px solid #000",
+    boxShadow: 24,
+    pt: 2,
+    px: 4,
+    pb: 3,
+    borderRadius: "12px",
+  };
+  const { isOpen, open, close } = useAddToContactModalStore();
+  const { control, handleSubmit, reset } = useForm<FormData>({
+    resolver: yupResolver(schema),
+  });
+  function onSubmit(data: FormData) {
+    socket.emit(
+      "joinWithParticipant",
+      { participantUserName: data.email },
+      (data) => {
+        toast.success(data.message);
+      }
+    );
+  }
+
   return (
     <Grid container style={{ height: "100vh" }}>
+      <div>
+        <Modal
+          open={isOpen}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box component={"form"} onSubmit={handleSubmit(onSubmit)} sx={style}>
+            <CloseIcon
+              sx={{
+                cursor: "pointer",
+                position: "absolute",
+                top: 0,
+                right: 0,
+                margin: "5px",
+                fontSize: "2rem",
+              }}
+              onClick={() => close()}
+            />
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Add Participant by email
+            </Typography>
+            <Box sx={{ mt: 4 }}>
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    fullWidth
+                    label="Email"
+                    id="fullWidth"
+                    {...field}
+                  />
+                )}
+              />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: 4,
+              }}
+            >
+              <Button
+                sx={{ color: "text.primary" }}
+                variant="contained"
+                type="submit"
+              >
+                Add
+              </Button>
+            </Box>
+          </Box>
+        </Modal>
+      </div>
       <Grid
         sx={{ height: "100%", display: "flex", flexDirection: "column" }}
         xs={4}

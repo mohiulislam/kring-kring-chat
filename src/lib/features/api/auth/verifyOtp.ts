@@ -15,3 +15,4 @@ export const verifyEmailApi = apiSlice.injectEndpoints({
 });
 
 export const { useVerifyEmailMutation } = verifyEmailApi;
+ 

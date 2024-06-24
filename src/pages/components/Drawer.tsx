@@ -15,6 +15,9 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { CSSObject, Theme, styled, useTheme } from "@mui/material/styles";
 import * as React from "react";
+import AddIcCallIcon from "@mui/icons-material/AddIcCall";
+import { useAddToContactModalStore, useAuthStore } from "@/store/store";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const drawerWidth = 240;
 
@@ -44,7 +47,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
@@ -81,6 +83,9 @@ export default function MiniDrawer({
     setOpen(false);
   };
 
+  const { logOut } = useAuthStore();
+
+  const { open: openModal, close: closeModal } = useAddToContactModalStore();
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -109,53 +114,46 @@ export default function MiniDrawer({
         )}
 
         <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
+          <ListItem disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              onClick={() => openModal()}
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
+                <AddIcCallIcon />
+              </ListItemIcon>
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              onClick={() => logOut()}
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+                <LogoutIcon />
+              </ListItemIcon>
+            </ListItemButton>
+          </ListItem>
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1 }}>

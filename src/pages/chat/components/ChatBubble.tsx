@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 
 interface ChatBubbleProps {
-  message: Message;
+  message: { content: string; createdAt: Date };
   won: boolean;
 }
 

@@ -1,12 +1,11 @@
-import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-
 import { Link, useNavigate } from "react-router-dom";
-import { useLoginMutation } from "@/lib/features/api/auth/loginApi";
 import { toast } from "react-hot-toast";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useLoginMutation } from "@/apiHooks/auth/useAuth";
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -30,18 +29,31 @@ export default function SignIn() {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<FormData>({
     resolver: yupResolver(validationSchema),
   });
 
-  const [login, { data, isLoading, isError, error, isSuccess }] =
-    useLoginMutation();
+  const {
+    data,
+    error,
+    isError,
+    isIdle,
+    isPending,
+    isPaused,
+    isSuccess,
+    failureCount,
+    failureReason,
+    mutate,
+    mutateAsync,
+    status,
+    submittedAt,
+    variables,
+  } = useLoginMutation();
 
   console.log(JSON.stringify(error));
 
   const onSubmit = (data: FormData) => {
-    login({
+    mutate({
       username: data.email,
       password: data.password,
     });
@@ -97,7 +109,7 @@ export default function SignIn() {
           <Typography color="error">{(error as any).data.message}</Typography>
         )}
         <Button type="submit" variant="contained" sx={{ mt: 3 }}>
-          {isLoading ? "Signin in..." : "Sign In"}
+          {isPending ? "Signin in..." : "Sign In"}
         </Button>
         <Typography sx={{ mt: 2, color: "text.secondary" }}>
           Don't have an account?

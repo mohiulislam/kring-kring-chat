@@ -1,64 +1,74 @@
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import socket from "@/socket/socket";
+import { useAuthStore } from "@/store/store";
 import SendIcon from "@mui/icons-material/Send";
-import { IconButton, InputAdornment, TextField } from "@mui/material";
-import { useQueryClient } from "@tanstack/react-query";
-import React, { useState } from "react";
+import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
 
-// Define the ChatInput component, which takes a groupId as a prop
-function ChatInput({ groupId }: { groupId: string }) {
-  const [message, setMessage] = useState("");
-  const sendMessage = (message: string) => {
-    if (message.trim()) {
-      console.log(message);
+// Define your validation schema
+const schema = yup.object({
+  message: yup.string()
+   .required('Message is required')
+   .min(1, 'Your message must be at least 1 character long'),
+}).required();
 
+function ChatInput({ onSendMessage, groupId }: { groupId: string; onSendMessage: (any) => void; }) {
+  const userId = useAuthStore((state) => state?.userAuthInfo.user._id);
+  const { control, handleSubmit, reset } = useForm({
+    mode: 'onChange',
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = async (data: { message: string }) => {
+    console.log("Sending message:", data.message);
+    
+    if (data.message.trim()) {
       socket.emit("message", {
-        message: message,
+        message: data.message,
         groupId: groupId,
       });
-      setMessage("");
+      
+      onSendMessage({
+        messagesQueryKey: ["messages", { groupId: groupId, pageSize: 15 }],
+        message: {
+          user: userId,
+          content: data.message,
+          group: groupId,
+          createdAt: new Date().toISOString(),
+        },
+      });
+      reset();
     }
   };
-  const queryClient = useQueryClient();
-
-  const handleSendClick = () => {
-    sendMessage(message);
-    queryClient.setQueryData(["messages", 1], (oldData: any) => {
-      if (!oldData) return oldData;
-
-      const updatedFirstPage = [message, ...oldData.pages[0]];
-
-      return {
-        ...oldData,
-        pages: [updatedFirstPage, ...oldData.pages.slice(1)],
-      };
-    });
-  };
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
-      sendMessage(message);
-    }
-  };
-
-  
 
   return (
-    <TextField
-      fullWidth
-      variant="outlined"
-      placeholder="Type your message here..."
-      value={message}
-      onChange={(e) => setMessage(e.target.value)}
-      onKeyPress={handleKeyPress}
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position="end">
-            <IconButton onClick={handleSendClick}>
-              <SendIcon />
-            </IconButton>
-          </InputAdornment>
-        ),
-      }}
-    />
+    <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+      {/* Use Controller to wrap your TextField */}
+      <Controller
+        name="message"
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Type your message here..."
+            {...field} // Spread field props to connect input with react-hook-form
+            autoFocus
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton type="submit">
+                    <SendIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        )}
+      />
+    </Box>
   );
 }
 

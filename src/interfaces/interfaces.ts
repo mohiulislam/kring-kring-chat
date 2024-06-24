@@ -60,40 +60,19 @@ export interface Media {
 // Interface for Message
 export interface Message {
   _id?: string;
-  user: string;
-  group?: Group;
+  user: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  };
+  group: string;
   content: string;
   media?: Media;
   createdAt: Date;
   updatedAt?: Date;
 }
 
-export interface Login {
-  username: string;
-  password: string;
-}
 
-export interface Register {
-  password: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-}
-export interface RegisterResponse {
-  success: boolean;
-  message: string;
-  email: string;
-}
-export interface LoginResponse {
-  access_token: string;
-  user: {
-    username: string;
-    _id: string;
-    firstName: string;
-    lastName: string;
-    contactInfo: ContactInfo;
-  };
-}
 
 export interface CountryType {
   code: string;
@@ -109,7 +88,7 @@ export interface VerifyEmail {
 
 export interface VerifyEmailResponse {
   success: boolean;
-  acsess_token: string;
-  usernmae: string;
+  access_token: string;
+  userName: string;
   message: string;
 }

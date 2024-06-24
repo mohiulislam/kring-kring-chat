@@ -1,4 +1,4 @@
-import { useRegisterMutation } from "@/lib/features/api/auth/registerApi";
+import { useRegisterMutation } from "@/apiHooks/auth/useAuth";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useEffect } from "react";
@@ -39,7 +39,7 @@ export default function Register() {
 
   const navigate = useNavigate();
 
-  const [registration, { isLoading, error, data, isSuccess, isError }] =
+  const { data, error, isError, isIdle, isPending, isPaused, isSuccess  ,mutate} =
     useRegisterMutation();
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function Register() {
   }, [isSuccess]);
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    registration({
+    mutate({
       email: data.email,
       firstName: data.firstName,
       lastName: data.lastName,
@@ -150,7 +150,7 @@ export default function Register() {
                   color: "text.primary",
                 }}
               >
-                {isLoading ? "Registering..." : "Register"}
+                {isPending ? "Registering..." : "Register"}
               </Button>
             </Box>
           </Box>
