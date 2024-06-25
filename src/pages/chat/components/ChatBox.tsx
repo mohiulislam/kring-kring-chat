@@ -19,6 +19,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
 import { toast } from "react-hot-toast";
 import unisexAvatar from "@/assets/imgs/unisex-avatar.jpg";
+import _ from "lodash";
 
 // Define your validation schema
 const schema = yup
@@ -126,6 +127,8 @@ function ChatBox() {
     resolver: yupResolver(schema),
   });
 
+  console.log(group);
+
   const onSubmit = async (data: { message: string }) => {
     console.log("Sending message:", data.message);
 
@@ -144,6 +147,22 @@ function ChatBox() {
           createdAt: new Date().toISOString(),
         },
       });
+
+      queryClient.setQueryData(["groups"], (oldData: any) => {
+        const groupToUpdate = _.findIndex(oldData, ["_id", group._id]);
+
+        if (groupToUpdate !== -1) {
+          const updatedGroups = _.cloneDeep(oldData);
+          updatedGroups[groupToUpdate].lastMessage = {
+            content: data.message,
+            updatedAt: new Date().toISOString(),
+          };
+
+          return updatedGroups;
+        }
+        return oldData;
+      });
+
       reset();
     }
   };

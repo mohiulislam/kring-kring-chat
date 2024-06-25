@@ -1,7 +1,7 @@
 import { Box, Grid, List, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { useGetGroups } from "@/apiHooks/group/useGroup";
+import { useCreateGroup, useGetGroups } from "@/apiHooks/group/useGroup";
 import { useAddToContactModalStore, useGroupStore } from "@/store/store";
 import socket from "../../socket/socket";
 import ChatBox from "./components/ChatBox";
@@ -13,6 +13,9 @@ import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-hot-toast";
+import { Group } from "@/interfaces/interfaces";
+import _ from "lodash";
+
 const schema = yup
   .object({
     email: yup
@@ -30,9 +33,10 @@ function Chat() {
 
   const { group, setGroup } = useGroupStore();
 
-  const handleSetGroup = (group: string) => {
+  const handleSetGroup = (group: Group) => {
     setGroup(group);
   };
+  console.log(groups?.toString());
 
   useEffect(() => {
     if (groups) {
@@ -60,15 +64,27 @@ function Chat() {
   const { control, handleSubmit, reset } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
+
+  const {
+    data,
+    error: errorCreateGroup,
+    isError: isErrorCreateGroup,
+    isSuccess,
+    isPending,
+    mutate,
+  } = useCreateGroup();
+
   function onSubmit(data: FormData) {
-    socket.emit(
-      "joinWithParticipant",
-      { participantUserName: data.email },
-      (data) => {
-        toast.success(data.message);
-      }
-    );
+    mutate({
+      participantUserName: data.email,
+    });
   }
+
+  const sortedGroups = _.orderBy(
+    groups,
+    [(group) => new Date(group.lastMessage.updatedAt)],
+    ["desc"]
+  );
 
   return (
     <Grid container style={{ height: "100vh" }}>
@@ -119,7 +135,7 @@ function Chat() {
                 variant="contained"
                 type="submit"
               >
-                Add
+                {isPending ? "Adding..." : "Add"}
               </Button>
             </Box>
           </Box>
@@ -163,9 +179,10 @@ function Chat() {
               }}
             >
               <List>
-                {groups?.map((group: any) => {
+                {sortedGroups?.map((group: any) => {
                   return (
                     <Box
+                      key={group._id}
                       sx={{ cursor: "pointer" }}
                       onClick={() => handleSetGroup(group)}
                     >
