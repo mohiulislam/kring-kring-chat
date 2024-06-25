@@ -34,19 +34,15 @@ export interface User {
 // Interface for Group
 export interface Group {
   _id: string;
-  name?: string;
-  users: User[];
+  admin: string;
+  users: {
+    firstName: string;
+    lastName: string;
+    isOnline: boolean;
+    _id: string;
+  }[];
   messages: Message[];
   lastMessage: Message;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-// Interface for GroupUser
-export interface GroupUser {
-  user: User;
-  group: Group;
-  role: GroupRole;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -71,8 +67,6 @@ export interface Message {
   createdAt: Date;
   updatedAt?: Date;
 }
-
-
 
 export interface CountryType {
   code: string;

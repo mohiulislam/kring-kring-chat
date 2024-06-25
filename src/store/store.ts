@@ -1,14 +1,15 @@
+import { Group } from "@/interfaces/interfaces";
 import { toast } from "react-hot-toast";
 import create from "zustand";
 
 type GroupState = {
-  groupId: string;
-  setGroupId: (groupId: string) => void;
+  group: Group;
+  setGroup: (group: Group) => void;
 };
 
 export const useGroupStore = create<GroupState>((set) => ({
-  groupId: "",
-  setGroupId: (groupId) => set({ groupId }),
+  group: undefined,
+  setGroup: (group: Group) => set({ group }),
 }));
 
 type AuthState = {
@@ -29,9 +30,9 @@ type AuthState = {
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
-  userAuthInfo: JSON.parse(localStorage.getItem("userAuthInfo") || "null"),
+  userAuthInfo: JSON.parse(sessionStorage.getItem("userAuthInfo") || "null"),
   logOut: () => {
-    localStorage.removeItem("userAuthInfo");
+    sessionStorage.removeItem("userAuthInfo");
     set({ userAuthInfo: undefined });
     toast.success("Logged out successfully");
   },

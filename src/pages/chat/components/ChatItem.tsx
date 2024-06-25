@@ -5,8 +5,10 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import { format } from "date-fns";
-import { Group } from "../../../interfaces/interfaces";
-import { useAuthStore } from "@/store/store";
+
+import { useAuthStore, useGroupStore } from "@/store/store";
+import unisexAvatar from "@/assets/imgs/unisex-avatar.jpg";
+import { Group } from "@/interfaces/interfaces";
 
 export default function ChatItem({ group }: { group: Group }) {
   const userId = useAuthStore((state) => state?.userAuthInfo.user._id);
@@ -14,11 +16,10 @@ export default function ChatItem({ group }: { group: Group }) {
   const participant = group.users.find((user) => user._id !== userId);
 
   const participantName = participant?.firstName + " " + participant?.lastName;
-  
+
   const lastMessage = group?.lastMessage?.content;
 
-  console.log(group);
-  
+  const groupId = useGroupStore((state) => state.group?._id);
 
   const lastMessageTime = lastMessage
     ? format(group.lastMessage.updatedAt ?? "", "M/d/yy, h:mma")
@@ -28,6 +29,7 @@ export default function ChatItem({ group }: { group: Group }) {
       sx={{
         width: "100%",
         borderRadius: "5px",
+        backgroundColor: groupId === group._id ? "#4a4a4a" : "",
         "&:hover": {
           backgroundColor: "#4a4a4a",
         },
@@ -35,10 +37,7 @@ export default function ChatItem({ group }: { group: Group }) {
       alignItems="flex-start"
     >
       <ListItemAvatar>
-        <Avatar
-          alt={participantName}
-          src="https://cdn.vectorstock.com/i/1000x1000/98/45/person-gray-photo-placeholder-woman-vector-23519845.webp"
-        />
+        <Avatar alt={participantName} src={unisexAvatar} />
       </ListItemAvatar>
       <ListItemText
         primary={

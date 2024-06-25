@@ -1,23 +1,22 @@
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+import { useAddToContactModalStore, useAuthStore } from "@/store/store";
+import AddIcCallIcon from "@mui/icons-material/AddIcCall";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { CSSObject, Theme, styled, useTheme } from "@mui/material/styles";
 import * as React from "react";
-import AddIcCallIcon from "@mui/icons-material/AddIcCall";
-import { useAddToContactModalStore, useAuthStore } from "@/store/store";
-import LogoutIcon from "@mui/icons-material/Logout";
+import { Avatar, Divider } from "@mui/material";
+
+import unisexAvatar from "@/assets/imgs/unisex-avatar.jpg";
 
 const drawerWidth = 240;
 
@@ -113,47 +112,73 @@ export default function MiniDrawer({
           </DrawerHeader>
         )}
 
-        <List>
-          <ListItem disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              onClick={() => openModal()}
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
+        <List sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+          <Box>
+            <ListItem disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                onClick={() => openModal()}
                 sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
                 }}
               >
-                <AddIcCallIcon />
-              </ListItemIcon>
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              onClick={() => logOut()}
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <AddIcCallIcon />
+                </ListItemIcon>
+              </ListItemButton>
+            </ListItem>
+          </Box>
+          <Box sx={{ marginTop: "auto" }}>
+            <ListItem disablePadding sx={{ display: "block" }}>
+              <ListItem disablePadding sx={{ display: "block" }}>
+                <ListItemButton
+                  onClick={() => logOut()}
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <LogoutIcon />
+                  </ListItemIcon>
+                </ListItemButton>
+              </ListItem>
+              <ListItemButton
+                onClick={() => {
+                  /* Add your settings action here */
+                }}
                 sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
                 }}
               >
-                <LogoutIcon />
-              </ListItemIcon>
-            </ListItemButton>
-          </ListItem>
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Avatar alt="Remy Sharp" src={unisexAvatar} />
+                </ListItemIcon>
+              </ListItemButton>
+            </ListItem>
+          </Box>
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1 }}>

@@ -17,6 +17,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import SendIcon from "@mui/icons-material/Send";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
+import { toast } from "react-hot-toast";
+import unisexAvatar from "@/assets/imgs/unisex-avatar.jpg";
 
 // Define your validation schema
 const schema = yup
@@ -29,14 +31,17 @@ const schema = yup
   .required();
 
 interface Message {
-  _id: string;
+  user: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  };
   content: string;
   group: string;
   createdAt: string;
 }
-
 function ChatBox() {
-  const groupId = useGroupStore((state) => state.groupId);
+  const group = useGroupStore((state) => state.group);
   const {
     data,
     error,
@@ -47,7 +52,7 @@ function ChatBox() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetMessages({ groupId, pageSize: 15 });
+  } = useGetMessages({ groupId: group._id, pageSize: 15 });
 
   const userId = useAuthStore((state) => state?.userAuthInfo.user._id);
 
@@ -68,36 +73,25 @@ function ChatBox() {
   }, [data?.pages[0]?.length]);
 
   useEffect(() => {
-    socket.on(
-      "message",
-      (data: {
-        user: {
-          _id: string;
-          firstName: string;
-          lastName: string;
-        };
-        content: string;
-        group: string;
-        createdAt: string;
-      }) => {
-        const messagesQueryKey = [
-          "messages",
-          { groupId: data.group, pageSize: 15 },
-        ];
+    socket.on("message", (data: Message) => {
+      const messagesQueryKey = [
+        "messages",
+        { groupId: data.group, pageSize: 15 },
+      ];
 
-        if (data?.user?._id !== userId) {
-          updateMessagesCache({
-            messagesQueryKey,
-            message: {
-              content: data?.content,
-              user: data.user._id,
-              group: data?.group,
-              createdAt: data?.createdAt,
-            },
-          });
-        }
+      if (data?.user?._id !== userId) {
+        toast.success(data?.content);
+        updateMessagesCache({
+          messagesQueryKey,
+          message: {
+            content: data?.content,
+            user: data.user._id,
+            group: data?.group,
+            createdAt: data?.createdAt,
+          },
+        });
       }
-    );
+    });
     return () => {
       socket.off("message");
     };
@@ -115,8 +109,6 @@ function ChatBox() {
       createdAt: string;
     };
   }) {
-    console.log("messagesQueryKey", messagesQueryKey);
-
     queryClient.setQueryData(messagesQueryKey, (oldData: any) => {
       if (!oldData) return oldData;
       const newPages = [...oldData.pages];
@@ -140,21 +132,23 @@ function ChatBox() {
     if (data.message.trim()) {
       socket.emit("message", {
         message: data.message,
-        groupId: groupId,
+        groupId: group._id,
       });
 
       updateMessagesCache({
-        messagesQueryKey: ["messages", { groupId: groupId, pageSize: 15 }],
+        messagesQueryKey: ["messages", { groupId: group._id, pageSize: 15 }],
         message: {
           user: userId,
           content: data.message,
-          group: groupId,
+          group: group._id,
           createdAt: new Date().toISOString(),
         },
       });
       reset();
     }
   };
+
+  const participant = group.users.find((user) => user._id !== userId);
 
   return (
     <Box
@@ -181,10 +175,7 @@ function ChatBox() {
         paddingLeft={2}
       >
         <ListItemAvatar>
-          <Avatar
-            alt={"participantName"}
-            src="https://cdn.vectorstock.com/i/1000x1000/98/45/person-gray-photo-placeholder-woman-vector-23519845.webp"
-          />
+          <Avatar alt={"participantName"} src={unisexAvatar} />
         </ListItemAvatar>
         <ListItemText
           primary={
@@ -194,7 +185,7 @@ function ChatBox() {
                 color: "text.primary",
               }}
             >
-              {"Shaila Khatun"}
+              {participant?.firstName + " " + participant?.lastName}
             </Typography>
           }
         />

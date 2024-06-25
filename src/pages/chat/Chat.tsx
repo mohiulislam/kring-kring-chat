@@ -28,10 +28,10 @@ interface FormData {
 function Chat() {
   const { data: groups, error, isLoading, isError } = useGetGroups();
 
-  const { groupId, setGroupId } = useGroupStore();
+  const { group, setGroup } = useGroupStore();
 
-  const handleSetGroup = (groupId: string) => {
-    setGroupId(groupId);
+  const handleSetGroup = (group: string) => {
+    setGroup(group);
   };
 
   useEffect(() => {
@@ -167,7 +167,7 @@ function Chat() {
                   return (
                     <Box
                       sx={{ cursor: "pointer" }}
-                      onClick={() => handleSetGroup(group._id)}
+                      onClick={() => handleSetGroup(group)}
                     >
                       <ChatItem group={group} />
                     </Box>
@@ -179,7 +179,7 @@ function Chat() {
         </Box>
       </Grid>
       <Grid sx={{ height: "100%" }} xs={8} md={9} item>
-        {groupId && <ChatBox />}
+        {group && <ChatBox />}
       </Grid>
     </Grid>
   );

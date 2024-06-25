@@ -5,7 +5,7 @@ const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:4000",
     prepareHeaders: (headers) => {
-      const JwtToken = localStorage.getItem("JwtToken");
+      const JwtToken = sessionStorage.getItem("JwtToken");
 
       if ("JwtToken") {
         console.log(11111);

@@ -27,7 +27,7 @@ export const useLoginMutation = () => {
   return useMutation({
     mutationFn: login,
     onSuccess: (data) =>
-      localStorage.setItem("userAuthInfo", JSON.stringify(data)),
+      sessionStorage.setItem("userAuthInfo", JSON.stringify(data)),
   });
 };
 

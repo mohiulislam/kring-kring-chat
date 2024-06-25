@@ -12,7 +12,7 @@ export const loginApi = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          localStorage.setItem("user", JSON.stringify(data));
+          sessionStorage.setItem("user", JSON.stringify(data));
         } catch (error) {
           console.error("Login failed: ", error);
         }
