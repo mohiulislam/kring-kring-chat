@@ -82,7 +82,12 @@ function Chat() {
 
   const sortedGroups = _.orderBy(
     groups,
-    [(group) => new Date(group.lastMessage.updatedAt)],
+    [
+      (group) => {
+        const lastMessageDate = group?.lastMessage?.updatedAt;
+        return lastMessageDate ? new Date(lastMessageDate) : new Date(0);
+      },
+    ],
     ["desc"]
   );
 
