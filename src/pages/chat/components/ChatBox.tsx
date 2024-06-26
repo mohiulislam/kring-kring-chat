@@ -1,25 +1,26 @@
+import { useGetMessages } from "@/apiHooks/message/useMessage";
+import unisexAvatar from "@/assets/imgs/unisex-avatar.jpg";
+import queryClient from "@/queryClient";
+import socket from "@/socket/socket";
+import { useAuthStore, useGroupStore } from "@/store/store";
+import { yupResolver } from "@hookform/resolvers/yup";
+import SendIcon from "@mui/icons-material/Send";
 import {
   Avatar,
   Box,
+  IconButton, InputAdornment,
   ListItemAvatar,
   ListItemText,
+  TextField,
   Typography,
 } from "@mui/material";
-import { useGetMessages } from "@/apiHooks/message/useMessage";
-import ChatBubble from "./ChatBubble";
-import { useAuthStore, useGroupStore } from "@/store/store";
-import InfiniteScroll from "react-infinite-scroller";
-import { useEffect, useRef } from "react";
-import socket from "@/socket/socket";
-import queryClient from "@/queryClient";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import SendIcon from "@mui/icons-material/Send";
-import { IconButton, InputAdornment, TextField } from "@mui/material";
-import { toast } from "react-hot-toast";
-import unisexAvatar from "@/assets/imgs/unisex-avatar.jpg";
 import _ from "lodash";
+import { useEffect, useRef } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import InfiniteScroll from "react-infinite-scroller";
+import * as yup from "yup";
+import ChatBubble from "./ChatBubble";
 
 const schema = yup
   .object({

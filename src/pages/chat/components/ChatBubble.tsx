@@ -1,4 +1,3 @@
-import { Message } from "@/interfaces/interfaces";
 import { getDeliveryTime } from "@/utils/getDeliveryTime";
 import { Box, Typography } from "@mui/material";
 import React from "react";

@@ -6,9 +6,9 @@ import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import { format } from "date-fns";
 
-import { useAuthStore, useGroupStore } from "@/store/store";
 import unisexAvatar from "@/assets/imgs/unisex-avatar.jpg";
 import { Group } from "@/interfaces/interfaces";
+import { useAuthStore, useGroupStore } from "@/store/store";
 
 export default function ChatItem({ group }: { group: Group }) {
   const userId = useAuthStore((state) => state?.userAuthInfo.user._id);

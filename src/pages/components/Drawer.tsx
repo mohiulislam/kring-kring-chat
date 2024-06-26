@@ -1,6 +1,10 @@
+import { useAddToContactModalStore, useAuthStore } from "@/store/store";
+import AddIcCallIcon from "@mui/icons-material/AddIcCall";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Avatar } from "@mui/material";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
@@ -9,12 +13,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import { useAddToContactModalStore, useAuthStore } from "@/store/store";
-import AddIcCallIcon from "@mui/icons-material/AddIcCall";
-import LogoutIcon from "@mui/icons-material/Logout";
 import { CSSObject, Theme, styled, useTheme } from "@mui/material/styles";
 import * as React from "react";
-import { Avatar, Divider } from "@mui/material";
 
 import unisexAvatar from "@/assets/imgs/unisex-avatar.jpg";
 

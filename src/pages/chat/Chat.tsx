@@ -59,8 +59,8 @@ function Chat() {
     pb: 3,
     borderRadius: "12px",
   };
-  const { isOpen, open, close } = useAddToContactModalStore();
-  const { control, handleSubmit, reset } = useForm<FormData>({
+  const { isOpen, close } = useAddToContactModalStore();
+  const { control, handleSubmit } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
 
