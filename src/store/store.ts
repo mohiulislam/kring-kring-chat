@@ -30,9 +30,9 @@ type AuthState = {
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
-  userAuthInfo: JSON.parse(sessionStorage.getItem("userAuthInfo") || "null"),
+  userAuthInfo: JSON.parse(localStorage.getItem("userAuthInfo") || "null"),
   logOut: () => {
-    sessionStorage.removeItem("userAuthInfo");
+    localStorage.removeItem("userAuthInfo");
     set({ userAuthInfo: undefined });
     toast.success("Logged out successfully");
   },

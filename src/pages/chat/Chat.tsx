@@ -1,20 +1,19 @@
 import { Box, Grid, List, TextField, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { useCreateGroup, useGetGroups } from "@/apiHooks/group/useGroup";
+import { Group } from "@/interfaces/interfaces";
 import { useAddToContactModalStore, useGroupStore } from "@/store/store";
+import { yupResolver } from "@hookform/resolvers/yup";
+import CloseIcon from "@mui/icons-material/Close";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import _ from "lodash";
+import { Controller, useForm } from "react-hook-form";
+import * as yup from "yup";
 import socket from "../../socket/socket";
 import ChatBox from "./components/ChatBox";
 import ChatItem from "./components/ChatItem";
-import Modal from "@mui/material/Modal";
-import Button from "@mui/material/Button";
-import CloseIcon from "@mui/icons-material/Close";
-import * as yup from "yup";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { toast } from "react-hot-toast";
-import { Group } from "@/interfaces/interfaces";
-import _ from "lodash";
 
 const schema = yup
   .object({

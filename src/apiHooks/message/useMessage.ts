@@ -1,5 +1,5 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
 import apiClient from "@/axios/axiosInstance";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 interface Message {
   user:  string;
@@ -38,7 +38,7 @@ export const useGetMessages = (params: GetMessagesParams) => {
       }
       return pages.length + 1;
     },
-    getPreviousPageParam: (firstPage, pages) => {
+    getPreviousPageParam: (_, pages) => {
       if (pages.length <= 1) {
         return undefined; 
       }

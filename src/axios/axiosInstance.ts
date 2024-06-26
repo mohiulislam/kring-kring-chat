@@ -1,4 +1,3 @@
-// src/api.js or src/axiosInstance.js
 import axios from "axios";
 
 const apiClient = axios.create({
@@ -7,7 +6,8 @@ const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
     Authorization: `Bearer ${
-      JSON.parse(sessionStorage.getItem("userAuthInfo" || "null"))?.access_token
+      JSON.parse(localStorage.getItem("userAuthInfo") || '{"access_token":""}')
+        ?.access_token || ""
     }`,
   },
 });
