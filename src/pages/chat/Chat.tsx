@@ -32,6 +32,9 @@ function Chat() {
 
   const { group, setGroup } = useGroupStore();
 
+
+
+
   const handleSetGroup = (group: Group) => {
     setGroup(group);
   };
@@ -193,7 +196,7 @@ function Chat() {
         </Box>
       </Grid>
       <Grid sx={{ height: "100%" }} xs={8} md={9} item>
-        {group && <ChatBox />}
+        {group._id && <ChatBox />}
       </Grid>
     </Grid>
   );
