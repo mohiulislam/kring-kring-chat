@@ -187,20 +187,9 @@ export default function OTPInput() {
   const [otp, setOtp] = React.useState("");
   const {
     data,
-    error,
-    isError,
-    isIdle,
     isPending,
-    isPaused,
     isSuccess,
-    failureCount,
-    failureReason,
     mutate,
-    mutateAsync,
-    reset,
-    status,
-    submittedAt,
-    variables,
   } = useVerifyMutation();
   const [timeRemaining, setTimeRemaining] = React.useState(180);
   React.useEffect(() => {

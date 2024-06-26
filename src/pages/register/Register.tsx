@@ -39,8 +39,7 @@ export default function Register() {
 
   const navigate = useNavigate();
 
-  const { data, error, isError, isIdle, isPending, isPaused, isSuccess  ,mutate} =
-    useRegisterMutation();
+  const { data, isPending, isSuccess, mutate } = useRegisterMutation();
 
   useEffect(() => {
     if (isSuccess) {

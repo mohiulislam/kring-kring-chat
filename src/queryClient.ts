@@ -11,7 +11,7 @@ const queryCache = new QueryCache({
 });
 
 const mutationCache = new MutationCache({
-  onError: (error, variables, context, mutation) => {
+  onError: (error) => {
     // Handle mutation errors globally
     console.error('Mutation Cache Error:', error);
   }
