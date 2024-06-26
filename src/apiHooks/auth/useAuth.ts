@@ -1,4 +1,5 @@
 import apiClient from "@/axios/axiosInstance";
+import { useAuthStore } from "@/store/store";
 import { useMutation } from "@tanstack/react-query";
 export interface Login {
   username: string;
@@ -24,10 +25,16 @@ const login = async (body: Login): Promise<LoginResponse> => {
 };
 
 export const useLoginMutation = () => {
+  const { logIn } = useAuthStore();
   return useMutation({
     mutationFn: login,
-    onSuccess: (data) =>
-      localStorage.setItem("userAuthInfo", JSON.stringify(data)),
+    onSuccess: (data) => {
+      // Store the userAuthInfo in local storage
+      localStorage.setItem("userAuthInfo", JSON.stringify(data));
+
+      // Update the userAuthInfo in the Zustand store
+      logIn(data);
+    },
   });
 };
 

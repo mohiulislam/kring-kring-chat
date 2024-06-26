@@ -34,23 +34,12 @@ export default function SignIn() {
   });
 
   const {
-    data,
     error,
     isError,
-    isIdle,
     isPending,
-    isPaused,
     isSuccess,
-    failureCount,
-    failureReason,
     mutate,
-    mutateAsync,
-    status,
-    submittedAt,
-    variables,
   } = useLoginMutation();
-
-  console.log(JSON.stringify(error));
 
   const onSubmit = (data: FormData) => {
     mutate({

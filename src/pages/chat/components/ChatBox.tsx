@@ -21,7 +21,6 @@ import { toast } from "react-hot-toast";
 import unisexAvatar from "@/assets/imgs/unisex-avatar.jpg";
 import _ from "lodash";
 
-// Define your validation schema
 const schema = yup
   .object({
     message: yup
@@ -43,17 +42,8 @@ interface Message {
 }
 function ChatBox() {
   const group = useGroupStore((state) => state.group);
-  const {
-    data,
-    error,
-    isLoading,
-    isError,
-    fetchPreviousPage,
-    status,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useGetMessages({ groupId: group._id, pageSize: 15 });
+  const { data, status, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useGetMessages({ groupId: group._id, pageSize: 15 });
 
   const userId = useAuthStore((state) => state?.userAuthInfo.user._id);
 
@@ -65,10 +55,7 @@ function ChatBox() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (
-      (data?.pageParams?.length < 2 && scrollRef.current) ||
-      data?.pages[0]?.length
-    ) {
+    if (data?.pageParams?.length && scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [data?.pages[0]?.length]);
@@ -167,7 +154,7 @@ function ChatBox() {
     }
   };
 
-  const participant = group.users.find((user) => user._id !== userId);
+  const participant = group?.users?.find((user) => user._id !== userId);
 
   return (
     <Box

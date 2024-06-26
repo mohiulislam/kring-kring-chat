@@ -8,7 +8,7 @@ type GroupState = {
 };
 
 export const useGroupStore = create<GroupState>((set) => ({
-  group: undefined,
+  group: {} as Group,
   setGroup: (group: Group) => set({ group }),
 }));
 
@@ -27,6 +27,7 @@ type AuthState = {
     };
   };
   logOut: () => void;
+  logIn: (userAuthInfo: AuthState["userAuthInfo"]) => void;
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -36,6 +37,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ userAuthInfo: undefined });
     toast.success("Logged out successfully");
   },
+  logIn: (userAuthInfo: AuthState["userAuthInfo"]) => set({ userAuthInfo }),
 }));
 
 interface OpenCloseState {
