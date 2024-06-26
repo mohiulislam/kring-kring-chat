@@ -84,7 +84,7 @@ export default function MiniDrawer({
 
   const { logOut } = useAuthStore();
 
-  const { open: openModal, close: closeModal } = useAddToContactModalStore();
+  const { open: openModal } = useAddToContactModalStore();
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />

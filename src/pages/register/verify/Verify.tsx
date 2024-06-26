@@ -1,7 +1,6 @@
 import { useVerifyMutation } from "@/apiHooks/auth/useAuth";
 import { Input as BaseInput } from "@mui/base/Input";
-import { Button, CircularProgress, Typography } from "@mui/material";
-import { Box, styled } from "@mui/system";
+import { Box, Button, CircularProgress, Typography, styled } from "@mui/material";
 import * as React from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
