@@ -28,7 +28,7 @@ interface FormData {
 }
 
 function Chat() {
-  const { data: groups, error, isLoading, isError } = useGetGroups();
+  const { data: groups } = useGetGroups();
 
   const { group, setGroup } = useGroupStore();
 
@@ -64,14 +64,7 @@ function Chat() {
     resolver: yupResolver(schema),
   });
 
-  const {
-    data,
-    error: errorCreateGroup,
-    isError: isErrorCreateGroup,
-    isSuccess,
-    isPending,
-    mutate,
-  } = useCreateGroup();
+  const { isPending, mutate } = useCreateGroup();
 
   function onSubmit(data: FormData) {
     mutate({
@@ -82,7 +75,7 @@ function Chat() {
   const sortedGroups = _.orderBy(
     groups,
     [
-      (group) => {
+      (group: Group) => {
         const lastMessageDate = group?.lastMessage?.updatedAt;
         return lastMessageDate ? new Date(lastMessageDate) : new Date(0);
       },

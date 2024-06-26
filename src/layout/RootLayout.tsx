@@ -1,4 +1,4 @@
-import { Box } from "@mui/system";
+import { Box } from "@mui/material";
 import { Toaster } from "react-hot-toast";
 
 import { Outlet } from "react-router-dom";
