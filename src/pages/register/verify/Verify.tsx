@@ -1,6 +1,12 @@
 import { useVerifyMutation } from "@/apiHooks/auth/useAuth";
 import { Input as BaseInput } from "@mui/base/Input";
-import { Box, Button, CircularProgress, Typography, styled } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Typography,
+  styled,
+} from "@mui/material";
 import * as React from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -112,7 +118,7 @@ function OTP({
   };
 
   const handleClick = (
-    event: React.MouseEvent<HTMLInputElement, MouseEvent>,
+    _event: React.MouseEvent<HTMLInputElement, MouseEvent>,
     currentIndex: number
   ) => {
     selectInput(currentIndex);
@@ -184,12 +190,7 @@ function OTP({
 
 export default function OTPInput() {
   const [otp, setOtp] = React.useState("");
-  const {
-    data,
-    isPending,
-    isSuccess,
-    mutate,
-  } = useVerifyMutation();
+  const { data, isPending, isSuccess, mutate } = useVerifyMutation();
   const [timeRemaining, setTimeRemaining] = React.useState(180);
   React.useEffect(() => {
     if (!timeRemaining) return;
@@ -218,7 +219,7 @@ export default function OTPInput() {
       email: state.email,
     });
   }
- 
+
   const [isResending, setIsResending] = React.useState(false);
 
   const navigate = useNavigate();
