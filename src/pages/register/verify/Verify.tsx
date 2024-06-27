@@ -210,7 +210,7 @@ export default function OTPInput() {
     });
   }
 
-  const [isResending, setIsResending] = React.useState(false);
+  const [isResending] = React.useState(false);
 
   const navigate = useNavigate();
 
