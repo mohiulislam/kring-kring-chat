@@ -4,7 +4,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Avatar } from "@mui/material";
+import { Avatar, ListItemText } from "@mui/material";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
@@ -132,6 +132,10 @@ export default function MiniDrawer({
                 >
                   <AddIcCallIcon />
                 </ListItemIcon>
+                <ListItemText
+                  primary={"Add Buddy"}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
               </ListItemButton>
             </ListItem>
           </Box>
@@ -155,12 +159,14 @@ export default function MiniDrawer({
                   >
                     <LogoutIcon />
                   </ListItemIcon>
+                  <ListItemText
+                    primary={"Log Out"}
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
                 </ListItemButton>
               </ListItem>
               <ListItemButton
-                onClick={() => {
-                  /* Add your settings action here */
-                }}
+                onClick={() => {}}
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? "initial" : "center",

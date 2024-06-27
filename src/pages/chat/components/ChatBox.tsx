@@ -8,7 +8,8 @@ import SendIcon from "@mui/icons-material/Send";
 import {
   Avatar,
   Box,
-  IconButton, InputAdornment,
+  IconButton,
+  InputAdornment,
   ListItemAvatar,
   ListItemText,
   TextField,

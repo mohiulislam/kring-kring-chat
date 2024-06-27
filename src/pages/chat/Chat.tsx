@@ -32,13 +32,9 @@ function Chat() {
 
   const { group, setGroup } = useGroupStore();
 
-
-
-
   const handleSetGroup = (group: Group) => {
     setGroup(group);
   };
-  console.log(groups?.toString());
 
   useEffect(() => {
     if (groups) {
@@ -67,7 +63,7 @@ function Chat() {
     resolver: yupResolver(schema),
   });
 
-  const { isPending, mutate } = useCreateGroup();
+  const { data, isPending, mutate, isSuccess } = useCreateGroup();
 
   function onSubmit(data: FormData) {
     mutate({
@@ -85,6 +81,16 @@ function Chat() {
     ],
     ["desc"]
   );
+
+  console.log(data);
+
+  useEffect(() => {
+    if (isSuccess) {
+      close();
+      socket.emit("joinGroup", { groupId: data._id });
+    }
+  });
+  console.log(localStorage.getItem("userAuthInfo"));
 
   return (
     <Grid container style={{ height: "100vh" }}>
