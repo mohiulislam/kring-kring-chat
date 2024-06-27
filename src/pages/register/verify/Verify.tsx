@@ -202,16 +202,6 @@ export default function OTPInput() {
     return () => clearInterval(intervalId); // Cleanup on unmount
   }, [timeRemaining]);
 
-  function handleResendOtp() {
-    setIsResending(true);
-    // Simulate an API call
-    setTimeout(() => {
-      setOtp(""); // Clear the OTP input
-      setTimeRemaining(10); // Reset the timer
-      setIsResending(false);
-      toast.success("OTP has been resent.");
-    }, 2000); // Simulated delay for the API call
-  }
   const { state } = useLocation();
   function handleverifyEmail() {
     mutate({
@@ -228,6 +218,15 @@ export default function OTPInput() {
     if (isSuccess && data?.message && data?.success) {
       toast.success(data?.message);
       navigate("/chat");
+      console.log(data);
+
+      localStorage.setItem("userAuthInfo", JSON.stringify({
+    
+
+        access_token: data.access_token,
+        user:data.user
+
+      }));
     }
     if (isSuccess && data?.message && !data?.success) {
       toast.error(data?.message);
@@ -297,7 +296,6 @@ export default function OTPInput() {
               width: "25%",
               alignSelf: "center",
             }}
-            onClick={handleResendOtp}
           >
             {isResending ? <CircularProgress size={24} /> : "Resend OTP"}
           </Button>

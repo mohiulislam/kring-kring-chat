@@ -33,19 +33,19 @@ function App() {
         },
         {
           path: "/",
-          element: <Welcome />,
+          element: userAuthInfo ? <Navigate to="/chat" replace /> : <Welcome />,
         },
         {
           path: "/signin",
-          element: <SignIn />,
+          element: userAuthInfo ? <Navigate to="/chat" replace /> : <SignIn />,
         },
         {
           path: "/register",
-          element: <Register />,
+          element: userAuthInfo ? <Navigate to="/chat" replace /> : <Register />,
         },
         {
           path: "/register/verify",
-          element: <OTPInput />,
+          element: userAuthInfo ? <Navigate to="/chat" replace /> : <OTPInput />,
         },
       ],
     },

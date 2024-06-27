@@ -50,6 +50,22 @@ export interface RegisterPayload {
   email: string;
 }
 
+export interface VerifyResponse {
+  success: boolean;
+  message: string;
+  access_token: string;
+  user: {
+    _id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    contactInfo: {
+      email: string;
+      phone: string;
+    };
+  };
+}
+
 const register = async (body: RegisterPayload): Promise<RegisterResponse> => {
   const response = await apiClient.post("/auth/register", body);
   return response.data;
@@ -65,7 +81,7 @@ const verify = async ({
 }: {
   code: string;
   email: string;
-}): Promise<RegisterResponse> => {
+}): Promise<VerifyResponse> => {
   const response = await apiClient.post("/auth/verify", { code, email });
   return response.data;
 };
